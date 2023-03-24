@@ -11,7 +11,6 @@ export async function validateCakes(req, res, next){
         if(flavourId && flavour.length === 0){
             return res.sendStatus(404);
         }
-
         if(cake?.length > 0){
             return res.sendStatus(409);
         }
