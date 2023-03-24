@@ -20,7 +20,7 @@ export async function getClientsOrderById(req, res){
         SELECT 
             orders.id AS "orderId",
             orders.quantity,
-            TO_CHAR(orders.createdat, 'YYYY-MM-DD') AS "createdAt",
+            TO_CHAR(orders.createdat, 'YYYY-MM-DD HH:MM') AS "createdAt",
             orders.totalprice AS "totalPrice",
             cakes.name AS "cakeName"
 
