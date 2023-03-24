@@ -8,7 +8,7 @@ export async function validateCakes(req, res, next){
         const {rows: cake} = await db.query(`SELECT * FROM cakes WHERE name = $1;`, [name])
         const {rows: flavour} = await db.query(`SELECT * FROM flavours WHERE id = $1;`, [flavourId])
 
-        if(flavour?.length === 0){
+        if(flavourId && flavour.length === 0){
             return res.sendStatus(404);
         }
 
