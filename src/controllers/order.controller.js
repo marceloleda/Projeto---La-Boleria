@@ -12,6 +12,19 @@ export async function insertOrder(req, res){
         return res.sendStatus(500);    
     }
 }
+
+export async function patchOrder(req, res){
+    const {id} = req.params;
+    try{
+        const query = `UPDATE orders SET isDelivered = true WHERE id = $1;`
+        await db.query(query, [id])
+        res.sendStatus(204)
+    }catch(error){
+        console.log(error.message)
+        return res.sendStatus(500);    
+    }
+}
+
 export async function getOrder(req, res){
     try{
         const {date} = req.query
@@ -34,7 +47,8 @@ export async function getOrder(req, res){
         orders.id AS orderId,
         TO_CHAR(orders.createdat, 'YYYY-MM-DD HH:MM') AS createdAt,
         orders.quantity AS quantity,
-        orders.totalprice AS totalPrice
+        orders.totalprice AS totalPrice,
+        orders.isdelivered
         FROM clients
         JOIN orders ON orders.clientid = clients.id
         JOIN cakes ON cakes.id = orders.cakeid

@@ -11,16 +11,13 @@ export async function validateOrder(req, res, next){
         if(!idClient?.length > 0 || !idCake?.length > 0 ){
             return res.sendStatus(404);
         }
-
         const validation = orderSchema.validate(body, {abortEarly: false});
-
         if(validation.error){
             const errors = validation.error.details.map((details)=>details.message);
             console.log(errors)
             res.sendStatus(400)
             return;
         }
-        
         next()
     }catch(error){
         return res.sendStatus(500);
