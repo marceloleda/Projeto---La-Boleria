@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cakesRouter from './routes/cakes.routes.js';
 import clientsRouter from './routes/clients.routes.js';
 import orderRouter from './routes/order.routes.js';
+import flavoursRouter from './routes/flavours.routes.js';
 
 
 dotenv.config()
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use(cakesRouter)
 app.use(clientsRouter)
 app.use(orderRouter)
+app.use(flavoursRouter)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=>{

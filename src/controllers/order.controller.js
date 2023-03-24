@@ -14,8 +14,9 @@ export async function insertOrder(req, res){
 }
 export async function getOrder(req, res){
     try{
-        const {rows:orders} = await db.query(`
-        SELECT 
+        const {date} = req.query
+        
+        const query = `SELECT 
         JSON_BUILD_OBJECT (
             'id', clients.id,
             'name', clients.name,
@@ -27,20 +28,26 @@ export async function getOrder(req, res){
             'name', cakes.name,
             'price', cakes.price,
             'description', cakes.description,
-            'image', cakes.image
+            'image', cakes.image,
+            'flavour', flavours.name
         ) AS cake,
         orders.id AS orderId,
-        TO_CHAR(orders.createdat, 'YYYY-MM-DD') AS createdAt,
+        TO_CHAR(orders.createdat, 'YYYY-MM-DD HH:MM') AS createdAt,
         orders.quantity AS quantity,
         orders.totalprice AS totalPrice
         FROM clients
         JOIN orders ON orders.clientid = clients.id
-        JOIN cakes ON cakes.id = orders.cakeid;
-        `)
-        if(orders?.length === 0){
-            return res.sendStatus(404);
-        }
+        JOIN cakes ON cakes.id = orders.cakeid
+        LEFT JOIN flavours ON flavours.id = cakes.flavourId
+        ${date?`WHERE TO_CHAR(orders.createdat, 'YYYY-MM-DD') = $1`: ''}
+        ;`
         
+        const {rows:orders} = await db.query(query, date?[date]: "")
+        
+        if(orders?.length === 0){
+            return res.status(404).send(orders);
+
+        }
         res.status(200).send(orders)
     }catch(error){
         console.log(error.message)
@@ -67,7 +74,7 @@ export async function getOrderById(req, res){
                 'image', cakes.image
                 ),
                 'orderId', orders.id,
-                'createdAt', TO_CHAR(orders.createdat, 'YYYY-MM-DD'),
+                'createdAt', TO_CHAR(orders.createdat, 'YYYY-MM-DD HH:MM'),
                 'quantity', orders.quantity,
                 'totalPrice', orders.totalprice
             ) AS result

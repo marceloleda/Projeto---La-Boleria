@@ -17,7 +17,7 @@ export async function validateOrder(req, res, next){
         if(validation.error){
             const errors = validation.error.details.map((details)=>details.message);
             console.log(errors)
-            res.status(400).send(errors)
+            res.sendStatus(400)
             return;
         }
         
